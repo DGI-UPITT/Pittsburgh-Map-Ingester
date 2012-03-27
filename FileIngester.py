@@ -8,9 +8,9 @@ def createObjectFromFiles(fedora, config, objectData):
     Create a fedora object containing all the data in objectData and more
     """
 
-    for ds in [ "TIFF", "MODS" ]:
+    for ds in [ "TIFF" ]:
         # some error checking
-        if not objectData['datastreams'][ds]:
+        if not objectData['datastreams'].has_key(ds):
             # broken object
             print("Object data is missing required datastream: %s" % ds)
             return False
@@ -34,7 +34,7 @@ def createObjectFromFiles(fedora, config, objectData):
     # ingest the datastreams we were given
     for dsid, file in objectData['datastreams'].iteritems():
         # hard coded blarg:
-        if dsid in ["MODS"]:
+        if dsid in [ "MODS" ]:
             controlGroup = "X"
         else:
             controlGroup = "M"
@@ -44,6 +44,7 @@ def createObjectFromFiles(fedora, config, objectData):
     # create a JP2 datastream
     tifFile = objectData['datastreams']['TIFF']
     baseName = os.path.splitext(os.path.basename(tifFile))[0]
+
     jp2File = os.path.join(config.tempDir, "%s.jp2" % baseName)
     converter.tif_to_jp2(tifFile, jp2File, 'default', 'default') # this will generate jp2File
     fedoraLib.update_datastream(obj, u"JP2", jp2File, label=os.path.basename(jp2File), mimeType=misc.getMimeType("jp2"))
@@ -51,9 +52,9 @@ def createObjectFromFiles(fedora, config, objectData):
 
     # i'm generating my own thumbnails
     tnFile = os.path.join(config.tempDir, "tmp.jpg")
-    converter.tif_to_jpg(os.path.join(bookFolder, pages[0]), tnFile, imageMagicOpts='TN')
-    #add a TN datastream to the book
-    fedoraLib.update_datastream(bookObj, u"TN", tnFile, label=unicode(config.myCollectionName+"_TN.jpg"), mimeType=misc.getMimeType("jpg"))
+    converter.tif_to_jpg(tifFile, tnFile, imageMagicOpts='TN')
+    #add a TN datastream to the map object
+    fedoraLib.update_datastream(obj, u"TN", tnFile, label=unicode(config.myCollectionName+"_TN.jpg"), mimeType=misc.getMimeType("jpg"))
     os.remove(tnFile) # delete it so we can recreate it again for the next thumbnail
     # now tnFile is closed and deleted
 
