@@ -27,6 +27,7 @@ def processFolder(fedora, config):
 
     # this is the list of all folders to search in for books
     baseFileDict = { 'parentPid' : config.myCollectionPid, 'contentModel' : 'islandora:mapCModel' }
+    georefBaseFileDict = { 'parentPid' : config.myCollectionPid, 'contentModel' : 'islandora:georefCModel' }
     totalFiles = 0
     completeFiles = 0
     for subFolder in os.listdir(folder):
@@ -62,20 +63,22 @@ def processFolder(fedora, config):
                 # now ingest the georef clips
                 for georefclip in get_immediate_subdirectories(os.path.join(folder, subFolder)):
                     # clear the datastreams list for the georef clips
-                    subFileDict = { 'label': georefclip, 'datastreams' : {} }
+                    fileDict = { 'label': georefclip, 'datastreams' : {} }
                     # georef clip metadata
                     # maybe perform a subloop on these after object creation?
                     if not addFileByPattern("TIFF", "%s/*.tif" % georefclip):
                         if not addFileByPattern("TIFF", "%s/*.tiff" % georefclip):
                             # failed
                             print("Could not find base tif file - skipping georefclip directory %s" % georefclip)
-                            continue # next subFolder
+                            continue # next georef
                     addFileByPattern("CNTRLP", "%s/*.controlpts.txt" % georefclip)
                     addFileByPattern("CNTRLPXML", "%s/*.controlpts.txt.xml" % georefclip)
                     addFileByPattern("TFWX", "%s/*.tfwx" % georefclip)
                     addFileByPattern("AUX", "%s/*.aux" % georefclip)
                     addFileByPattern("RRD", "%s/*.rrd" % georefclip)
                     addFileByPattern("TIFXML", "%s/*.tif.xml" % georefclip)
-                    FileIngester.createObjectFromFiles(fedora, config, fileDict)
+                    fileDict.update(georefBaseFileDict)
+                    if FileIngester.createObjectFromFiles(fedora, config, fileDict):
+                        print("  georef clip (%s) ingested successfully" % georefclip)
 
     return completeFiles
