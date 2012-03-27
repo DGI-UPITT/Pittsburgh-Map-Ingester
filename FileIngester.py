@@ -31,14 +31,20 @@ def createObjectFromFiles(fedora, config, objectData):
         print("Connection error while trying to add fedora object (%s) - the connection to fedora may be broken", objPid)
         return False
 
+    # === DYNAMIC DATASTREAM SECTION ===
+    # these DS were defined by the Navigator as ID+source
+
     # ingest the datastreams we were given
     for dsid, file in objectData['datastreams'].iteritems():
         # hard coded blarg:
-        if dsid in [ "MODS" ]:
+        if dsid in [ "MODS", "KML" ]:
             controlGroup = "X"
         else:
             controlGroup = "M"
         fedoraLib.update_datastream(obj, dsid, file, label=unicode(os.path.basename(file)), mimeType=misc.getMimeType(os.path.splitext(file)[1]), controlGroup=controlGroup)
+
+    # === STATIC DATASTREAM SECTION ===
+    # these DS are implicit and defined here - sources are created as required
 
     # ingest my custom datastreams for this object
     # create a JP2 datastream
@@ -65,8 +71,6 @@ def createObjectFromFiles(fedora, config, objectData):
         """ extract this into tif_to_mix() """
         outfile = open(mixFile, "w")
         jhoveCmd1 = ["jhove", "-h", "xml", tifFile]
-        #jhoveCmd2 = ["xsltproc", "data/jhove2mix.xslt", "-"] # complete cmd for xsltproc
-        #jhoveCmd2 = ["xalan", "-xsl", "data/jhove2mix.xslt"] # complete cmd for xalan
         jhoveCmd2 = config.jhoveCmd
         p1 = subprocess.Popen(jhoveCmd1, stdout=subprocess.PIPE)
         p2 = subprocess.Popen(jhoveCmd2, stdin=p1.stdout, stdout=outfile)
