@@ -32,7 +32,7 @@ def sendReport():
 """ ====== M A I N ====== """
 def main(argv):
 
-    # register handlers so we properly disconnect and reconnect
+    # register handlers so we properly disconnect
     signal.signal(signal.SIGINT, shutdown_handler)
     signal.signal(signal.SIGTERM, shutdown_handler)
 
@@ -88,10 +88,10 @@ def main(argv):
     print("Searching for xslt processors for MIX data")
     r = subprocess.call(["which", "xalan"])
     if r == 0:
-        config.jhoveCmd = ["xalan", "-xsl", "data/jhove2mix.xslt"]
+        config.jhoveCmd = ["xalan", "-xsl", "data/jhove2mix.xslt"] # complete cmd for xalan
     else:
         if subprocess.call(["which", "xsltproc"]) == 0:
-            config.jhoveCmd = ["xsltproc", "data/jhove2mix.xslt", "-"]
+            config.jhoveCmd = ["xsltproc", "data/jhove2mix.xslt", "-"] # complete cmd for xsltproc
         else:
             config.jhoveCmd = None
 
