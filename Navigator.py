@@ -77,7 +77,17 @@ def processFolder(fedora, config):
                     addFileByPattern("AUX", "%s/*.aux" % georefclip)
                     addFileByPattern("RRD", "%s/*.rrd" % georefclip)
                     addFileByPattern("TIFXML", "%s/*.tif.xml" % georefclip)
+                    # the mebp
+                    addFileByPattern("DBF", "%s/*/*.dbf" % georefclip)
+                    addFileByPattern("PRJ", "%s/*/*.prj" % georefclip)
+                    addFileByPattern("SBN", "%s/*/*.sbn" % georefclip)
+                    addFileByPattern("SBX", "%s/*/*.sbx" % georefclip)
+                    addFileByPattern("SHP", "%s/*/*.shp" % georefclip)
+                    addFileByPattern("SHX", "%s/*/*.shx" % georefclip)
+
                     fileDict.update(georefBaseFileDict)
+                    extraNamespaces = { 'mapNS' : 'info:islandora/islandora-system:def/mapinfo#' }
+                    extraRelationships = { fedora_relationships.rels_predicate('mapNS', 'isGeorefClipOf') : "%s:%s" %(config.fedoraNS, subFolder) }
                     if FileIngester.createObjectFromFiles(fedora, config, fileDict):
                         print("  georef clip (%s) ingested successfully" % georefclip)
 
