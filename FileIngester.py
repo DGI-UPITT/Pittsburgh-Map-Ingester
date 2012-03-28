@@ -3,7 +3,7 @@ from utils.commonFedora import *
 import subprocess
 
 """ ====== INGEST A SINGLE OBJECT ====== """
-def createObjectFromFiles(fedora, config, objectData):
+def createObjectFromFiles(fedora, config, objectData, extraNamespaces={}, extraRelationships={}):
     """
     Create a fedora object containing all the data in objectData and more
     """
@@ -26,7 +26,7 @@ def createObjectFromFiles(fedora, config, objectData):
 
     # create the object (page)
     try:
-        obj = addObjectToFedora(fedora, unicode("%s" % objectData['label']), objPid, objectData['parentPid'], objectData['contentModel'])
+        obj = addObjectToFedora(fedora, unicode("%s" % objectData['label']), objPid, objectData['parentPid'], objectData['contentModel'], extraNamespaces=extraNamespaces, extraRelationships=extraRelationships)
     except FedoraConnectionException, fcx:
         print("Connection error while trying to add fedora object (%s) - the connection to fedora may be broken", objPid)
         return False
@@ -44,7 +44,7 @@ def createObjectFromFiles(fedora, config, objectData):
         fedoraLib.update_datastream(obj, dsid, file, label=unicode(os.path.basename(file)), mimeType=misc.getMimeType(os.path.splitext(file)[1]), controlGroup=controlGroup)
 
     # === STATIC DATASTREAM SECTION ===
-    # these DS are implicit and defined here - sources are created as required
+    # these DS are defined here - sources are created as required
 
     # ingest my custom datastreams for this object
     # create a JP2 datastream
