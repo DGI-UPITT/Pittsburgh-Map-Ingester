@@ -122,7 +122,7 @@ def main(argv):
 
     numBooks = Navigator.processFolder(fedora, config)
 
-    config.message.addLine("Script run complete: %d books ingested" % numBooks)
+    config.message.addLine("Script run complete: %d maps ingested" % numBooks)
     end = time.time()
     print("Total execution time: %f sec" % (end - start))
     config.message.addLine("Total execution time: %f sec" % (end - start))
