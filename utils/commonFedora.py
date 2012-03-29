@@ -13,7 +13,7 @@ def connectToFedora(url, user, pw):
     """
     Attempt to create a connection to fedora using the supplied username and password.  If the
     connection succeeds, return the connected fedora client, otherwise return None.  The calling
-    function should terminate if None is received.
+    function should terminate if None is received since fedora cannot be contacted.
     """
     try:
         connection = Connection(url, username=user, password=pw)
@@ -58,7 +58,7 @@ def createRelsExt(childObject, parentPid, contentModel, extraNamespaces={}, extr
     rels_ext.addRelationship(fedora_relationships.rels_predicate('fedora', 'isMemberOfCollection'), [parentPid, "pid"])
     if extraRelationships and type(extraRelationships) is DictType:
         for k, v in extraRelationships.iteritems():
-            rels_ext.addRelationship(k, [v, "literal"])
+            rels_ext.addRelationship(k, [v, "pid"])
 
     loop = True
     while loop:
