@@ -88,7 +88,7 @@ def processFolder(fedora, config):
                     fileDict.update(georefBaseFileDict)
                     extraNamespaces = { 'mapNS' : 'info:islandora/islandora-system:def/mapinfo#' }
                     extraRelationships = { fedora_relationships.rels_predicate('mapNS', 'isGeorefClipOf') : "%s:%s" %(config.fedoraNS, subFolder) }
-                    if FileIngester.createObjectFromFiles(fedora, config, fileDict):
+                    if FileIngester.createObjectFromFiles(fedora, config, fileDict, extraNamespaces=extraNamespaces, extraRelationships=extraRelationships):
                         print("  georef clip (%s) ingested successfully" % georefclip)
 
     return completeFiles
