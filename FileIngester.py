@@ -24,9 +24,16 @@ def createObjectFromFiles(fedora, config, objectData, extraNamespaces={}, extraR
     #extraNamespaces = { 'pageNS' : 'info:islandora/islandora-system:def/pageinfo#' }
     #extraRelationships = { fedora_relationships.rels_predicate('pageNS', 'isPageNumber') : str(idx+1) }
 
-    # create the object (page)
+    # this state change here will disable all map object (georefclips) so they don't show up
+    # but it will leave full maps (interpreted as large images) unaffected
+    if objectData['contentModel'] == 'islandora:mapCModel':
+        state = u'I'
+    else:
+        state = u'A'
+
+    # create the object (map/geoclip)
     try:
-        obj = addObjectToFedora(fedora, unicode("%s" % objectData['label']), objPid, objectData['parentPid'], objectData['contentModel'], extraNamespaces=extraNamespaces, extraRelationships=extraRelationships)
+        obj = addObjectToFedora(fedora, unicode("%s" % objectData['label']), objPid, objectData['parentPid'], objectData['contentModel'], extraNamespaces=extraNamespaces, extraRelationships=extraRelationships, state=state)
     except FedoraConnectionException, fcx:
         print("Connection error while trying to add fedora object (%s) - the connection to fedora may be broken", objPid)
         return False
