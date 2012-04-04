@@ -111,7 +111,7 @@ def addCollectionToFedora(fedora, myLabel, myPid, parentPid="islandora:root", co
 
     return collection_object
 
-def addObjectToFedora(fedora, myLabel, myPid, parentPid, contentModel, tnUrl=None, extraNamespaces={}, extraRelationships={}):
+def addObjectToFedora(fedora, myLabel, myPid, parentPid, contentModel, tnUrl=None, state=u'A', extraNamespaces={}, extraRelationships={}):
     """
     Add an object (not a collection) to fedora
     @param fedora The fedora instance to add the object to
@@ -135,7 +135,7 @@ def addObjectToFedora(fedora, myLabel, myPid, parentPid, contentModel, tnUrl=Non
             # this will throw a bunch of exceptions - all of them to the tune of "cannot connect to fedora"
             raise fcx
 
-    obj = fedora.createObject(myPid, label=myLabel)
+    obj = fedora.createObject(myPid, label=myLabel, state=state)
     print("Object created")
 
     # thumbnail, if one is supplied
