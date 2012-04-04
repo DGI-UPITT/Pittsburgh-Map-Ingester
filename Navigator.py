@@ -26,8 +26,8 @@ def processFolder(fedora, config):
     myCollection = addCollectionToFedora(fedora, config.myCollectionName, myPid=config.myCollectionPid, parentPid=config.hostCollectionPid, tnUrl=config.myCollectionIcon)
 
     # this is the list of all folders to search in for books
-    baseFileDict = { 'parentPid' : config.myCollectionPid, 'contentModel' : 'islandora:mapCModel' }
-    georefBaseFileDict = { 'parentPid' : config.myCollectionPid, 'contentModel' : 'islandora:georefCModel' }
+    baseFileDict = { 'parentPid' : config.myCollectionPid, 'contentModel' : 'islandora:sp_large_image_cmodel' }
+    georefBaseFileDict = { 'parentPid' : config.myCollectionPid, 'contentModel' : 'islandora:mapCModel' }
     totalFiles = 0
     completeFiles = 0
     for subFolder in os.listdir(folder):
@@ -51,7 +51,6 @@ def processFolder(fedora, config):
                     continue # next subFolder
             addFileByPattern("MODS", "*.mods.xml")
             addFileByPattern("DC", "*.dc.xml")
-            addFileByPattern("FGDC", "*.fgdc.xml")
 
             # creation of the dictionary here might be bad
             fileDict.update(baseFileDict)
@@ -71,6 +70,7 @@ def processFolder(fedora, config):
                             # failed
                             print("Could not find base tif file - skipping georefclip directory %s" % georefclip)
                             continue # next georef
+                    addFileByPattern("FGDC", "%s.fgdc.xml" % georefclip)
                     addFileByPattern("CNTRLP", "%s/*.controlpts.txt" % georefclip)
                     addFileByPattern("CNTRLPXML", "%s/*.controlpts.txt.xml" % georefclip)
                     addFileByPattern("TFWX", "%s/*.tfwx" % georefclip)
